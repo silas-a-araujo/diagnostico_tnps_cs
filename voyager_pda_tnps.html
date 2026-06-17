@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PdA tNPS — Voyager · Customer Security</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f5f4f0; font-family: 'Google Sans', 'Helvetica Neue', Arial, sans-serif; padding: 2rem; color: #333; }
+  .root { max-width: 900px; margin: 0 auto; }
+  .header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2rem; }
+  .brand { font-size: 11px; font-weight: 500; color: #820ad1; letter-spacing: 0.08em; text-transform: uppercase; }
+  .title { font-size: 22px; font-weight: 500; color: #000; margin: 4px 0 3px; line-height: 1.2; }
+  .subtitle { font-size: 13px; color: #555; }
+  .badge { background: #820ad1; color: #fff; font-size: 11px; font-weight: 500; padding: 5px 14px; border-radius: 20px; white-space: nowrap; margin-top: 4px; }
+  .section-label { font-size: 11px; font-weight: 500; color: #820ad1; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 10px; }
+  .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 2rem; }
+  .metric-card { background: #fff; border-radius: 10px; padding: 14px 16px; border: 0.5px solid #ddd; }
+  .metric-label { font-size: 11px; color: #777; margin-bottom: 5px; }
+  .metric-value { font-size: 24px; font-weight: 500; color: #000; }
+  .delta-up { font-size: 12px; color: #007a4d; margin-top: 3px; }
+  .delta-down { font-size: 12px; color: #e65c00; margin-top: 3px; }
+  .metric-meta { font-size: 11px; color: #999; margin-top: 3px; }
+  .progress-bar { width: 100%; height: 6px; background: #eee; border-radius: 3px; margin-top: 8px; }
+  .progress-fill { height: 6px; background: #820ad1; border-radius: 3px; }
+  .pillars-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 2rem; }
+  .pillar-card { background: #fff; border-radius: 10px; padding: 16px 18px; border: 0.5px solid #ddd; }
+  .pillar-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .pillar-num { width: 26px; height: 26px; border-radius: 50%; background: #820ad1; color: #fff; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .pillar-title { font-size: 13px; font-weight: 500; color: #000; line-height: 1.3; flex: 1; }
+  .status-btn { border: none; border-radius: 20px; font-size: 11px; font-weight: 500; padding: 3px 11px; cursor: default; }
+  .s-curso { background: #e8f5e9; color: #007a4d; }
+  .s-atencao { background: #fff3e0; color: #e65c00; }
+  .s-novo { background: #f3e5f5; color: #820ad1; }
+  .kpi-tag { display: inline-flex; align-items: center; gap: 6px; background: #f5f0fb; border-radius: 7px; padding: 5px 11px; margin-bottom: 12px; }
+  .kpi-tag-label { font-size: 10px; font-weight: 500; color: #820ad1; text-transform: uppercase; letter-spacing: 0.05em; }
+  .kpi-tag-value { font-size: 12px; color: #333; }
+  .checklist { display: flex; flex-direction: column; gap: 7px; }
+  .check-item { display: flex; align-items: flex-start; gap: 9px; font-size: 12.5px; color: #333; line-height: 1.45; cursor: pointer; user-select: none; }
+  .check-item input[type=checkbox] { margin-top: 2px; accent-color: #820ad1; cursor: pointer; flex-shrink: 0; width: 13px; height: 13px; }
+  .check-item.done { color: #bbb; text-decoration: line-through; }
+  .piloto-highlight { background: #f0faf5; border: 0.5px solid #007a4d; border-radius: 8px; padding: 9px 13px; margin-bottom: 12px; display: flex; align-items: baseline; gap: 7px; }
+  .piloto-num { font-size: 20px; font-weight: 500; color: #007a4d; }
+  .piloto-arrow { font-size: 13px; color: #555; }
+  .piloto-label { font-size: 12px; color: #555; }
+  .struct-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .struct-sub { font-size: 11px; font-weight: 500; color: #820ad1; margin-bottom: 8px; }
+  .kpi-section { background: #fff; border-radius: 10px; padding: 16px 18px; border: 0.5px solid #ddd; margin-bottom: 2rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th { text-align: left; font-size: 11px; font-weight: 500; color: #820ad1; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 10px 10px 0; border-bottom: 1px solid #eee; }
+  td { padding: 8px 10px 8px 0; border-bottom: 0.5px solid #f0f0f0; vertical-align: middle; color: #333; }
+  tr:last-child td { border-bottom: none; }
+  .kpi-name { font-weight: 500; color: #000; }
+  .freq-tag { background: #f5f4f0; border-radius: 4px; padding: 2px 9px; font-size: 11px; color: #555; }
+  .owner { color: #820ad1; font-size: 11px; }
+  .footer-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .alert-box { background: #fff8f0; border-left: 3px solid #e65c00; border-radius: 0 10px 10px 0; padding: 14px 16px; }
+  .alert-title { font-size: 12px; font-weight: 500; color: #e65c00; margin-bottom: 8px; }
+  .info-box { background: #f5f0fb; border-left: 3px solid #820ad1; border-radius: 0 10px 10px 0; padding: 14px 16px; }
+  .info-title { font-size: 12px; font-weight: 500; color: #820ad1; margin-bottom: 8px; }
+  .box-item { font-size: 12px; color: #555; margin-bottom: 5px; }
+  @media (max-width: 640px) {
+    body { padding: 1rem; }
+    .metrics-row { grid-template-columns: 1fr 1fr; }
+    .pillars-grid { grid-template-columns: 1fr; }
+    .struct-grid { grid-template-columns: 1fr; }
+    .footer-row { grid-template-columns: 1fr; }
+    .pillar-card[style*="grid-column"] { grid-column: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="root">
+
+  <div class="header">
+    <div>
+      <div class="brand">Customer Security · Voyager</div>
+      <div class="title">Painel de monitoramento — PdA tNPS</div>
+      <div class="subtitle">Foco: consistência nos finais de semana · Início: maio/2026</div>
+    </div>
+    <span class="badge">FDS focus</span>
+  </div>
+
+  <div class="section-label">Snapshot de KPIs — FDS</div>
+  <div class="metrics-row">
+    <div class="metric-card">
+      <div class="metric-label">tNPS FDS Atual — CS</div>
+      <div class="metric-value" style="color:#820ad1">68,56%</div>
+      <div class="delta-up">▲ +2,96 p.p. vs FDS ant.</div>
+      <div class="metric-meta">Meta: 75,39%</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">tNPS FDS — High Value</div>
+      <div class="metric-value" style="color:#e65c00">82,95%</div>
+      <div class="delta-down">▼ −6,52 p.p. vs FDS ant.</div>
+      <div class="metric-meta">Meta: 85,09%</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Gap para meta (CS)</div>
+      <div class="metric-value">−6,83</div>
+      <div class="metric-meta" style="color:#555">p.p. a fechar</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:61%"></div></div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Gap para meta (HV)</div>
+      <div class="metric-value">−2,14</div>
+      <div class="metric-meta" style="color:#555">p.p. a fechar</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
+    </div>
+  </div>
+
+  <div class="section-label">Pilares do plano de ação</div>
+  <div class="pillars-grid">
+
+    <div class="pillar-card">
+      <div class="pillar-header">
+        <div class="pillar-num">1</div>
+        <div class="pillar-title">Ações que continuam</div>
+        <span class="status-btn s-curso">Em curso</span>
+      </div>
+      <div class="kpi-tag">
+        <span class="kpi-tag-label">KPI</span>
+        <span class="kpi-tag-value">Redução do gap vs. Starlink</span>
+      </div>
+      <div class="checklist">
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Monitoramento em tempo real e atuação imediata em detratores</label>
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Campanhas de incentivo (elogios/promotoras)</label>
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Acompanhamento por quartil — foco Q3 e Q4</label>
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Gestão de execução: SLA, fila, redução de expirados</label>
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Atuação ativa dos TLs com feedback imediato</label>
+      </div>
+    </div>
+
+    <div class="pillar-card">
+      <div class="pillar-header">
+        <div class="pillar-num">2</div>
+        <div class="pillar-title">Ações a intensificar</div>
+        <span class="status-btn s-atencao">Atenção</span>
+      </div>
+      <div class="kpi-tag">
+        <span class="kpi-tag-label">KPI</span>
+        <span class="kpi-tag-value">Redução de detratores por falhas de condução</span>
+      </div>
+      <div class="checklist">
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Leitura obrigatória do histórico antes do atendimento</label>
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Personalização e empatia em 100% dos atendimentos</label>
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Aumento da velocidade de correção em tempo real</label>
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Padronização do Jeito NU de atender</label>
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Acompanhamento direcionado para novos agentes</label>
+      </div>
+    </div>
+
+    <div class="pillar-card">
+      <div class="pillar-header">
+        <div class="pillar-num">3</div>
+        <div class="pillar-title">Afunilamento de monitorias</div>
+        <span class="status-btn s-novo">Novo</span>
+      </div>
+      <div class="kpi-tag">
+        <span class="kpi-tag-label">KPI</span>
+        <span class="kpi-tag-value">Consistência entre semana vs. tNPS FDS</span>
+      </div>
+      <div class="checklist">
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Grupos abaixo do target = grupo foco de monitoria na semana</label>
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Acompanhamento: qtd. monitorias, aderência e feedbacks</label>
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Garantia de conversão rápida da monitoria em melhoria prática</label>
+      </div>
+    </div>
+
+    <div class="pillar-card">
+      <div class="pillar-header">
+        <div class="pillar-num">4</div>
+        <div class="pillar-title">Expansão do piloto 2 telas</div>
+        <span class="status-btn s-novo">Novo</span>
+      </div>
+      <div class="kpi-tag">
+        <span class="kpi-tag-label">KPI</span>
+        <span class="kpi-tag-value">Ganho de eficiência operacional</span>
+      </div>
+      <div class="piloto-highlight">
+        <span class="piloto-num">8%</span>
+        <span class="piloto-arrow">→</span>
+        <span class="piloto-num">15%</span>
+        <span class="piloto-label">das PAs com 2 telas</span>
+      </div>
+      <div class="checklist">
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Expansão ativa da cobertura do piloto</label>
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Ganho de agilidade e melhor navegação</label>
+        <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Suporte à qualidade do atendimento com 2ª tela</label>
+      </div>
+    </div>
+
+    <div class="pillar-card" style="grid-column: 1 / -1;">
+      <div class="pillar-header">
+        <div class="pillar-num">5</div>
+        <div class="pillar-title">Mudanças estruturais</div>
+        <span class="status-btn s-novo">Novo · Mai/26</span>
+      </div>
+      <div class="kpi-tag">
+        <span class="kpi-tag-label">KPI</span>
+        <span class="kpi-tag-value">Evolução acelerada do grupo foco</span>
+      </div>
+      <div class="struct-grid">
+        <div>
+          <div class="struct-sub">5.1 · Reorganização de alocação (SPACE)</div>
+          <div style="font-size:11px;color:#777;margin-bottom:9px;">Segmentação dos agentes em 3 grupos:</div>
+          <div class="checklist">
+            <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> ① Alta performance (semana + tNPS FDS)</label>
+            <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> ② Performam na semana, mas não sustentam no FDS</label>
+            <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> ③ Grupo foco (abaixo do target no mês)</label>
+            <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> 3 supervisores dedicados com acompanhamento in loco</label>
+          </div>
+        </div>
+        <div>
+          <div class="struct-sub">5.2 · Reforço de liderança</div>
+          <div class="checklist">
+            <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Gestão compartilhada de 2 coordenadores</label>
+            <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Entrada de 3 novos supervisores</label>
+            <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Menor span de controle — mais proximidade com a operação</label>
+            <label class="check-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('done',this.checked)"> Mais velocidade e profundidade na correção dos desvios</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-label">KPIs a monitorar</div>
+  <div class="kpi-section">
+    <table>
+      <tr>
+        <th style="width:35%">Indicador</th>
+        <th>Referência</th>
+        <th>Frequência</th>
+        <th>Fonte</th>
+      </tr>
+      <tr>
+        <td class="kpi-name">tNPS FDS — CS e High Value</td>
+        <td>Meta vs. realizado + Δ p.p.</td>
+        <td><span class="freq-tag">Semanal · FDS</span></td>
+        <td class="owner">NIO</td>
+      </tr>
+      <tr>
+        <td class="kpi-name">Gap Voyager vs. Starlink</td>
+        <td>Redução do diferencial</td>
+        <td><span class="freq-tag">Semanal</span></td>
+        <td class="owner">NIO / QS</td>
+      </tr>
+      <tr>
+        <td class="kpi-name">Detratores FDS — motivo raiz</td>
+        <td>Top 3 reasons + EP</td>
+        <td><span class="freq-tag">Semanal · FDS</span></td>
+        <td class="owner">NIO</td>
+      </tr>
+      <tr>
+        <td class="kpi-name">Consistência semana vs. FDS</td>
+        <td>Gap entre tNPS úteis e FDS</td>
+        <td><span class="freq-tag">Semanal</span></td>
+        <td class="owner">NIO / QS</td>
+      </tr>
+      <tr>
+        <td class="kpi-name">Cobertura do piloto 2 telas</td>
+        <td>% PAs ativas · meta: 15%</td>
+        <td><span class="freq-tag">Quinzenal</span></td>
+        <td class="owner">Voyager</td>
+      </tr>
+      <tr>
+        <td class="kpi-name">Evolução do grupo foco (③)</td>
+        <td>tNPS do grupo antes/depois SPACE</td>
+        <td><span class="freq-tag">Quinzenal</span></td>
+        <td class="owner">Voyager / QS</td>
+      </tr>
+      <tr>
+        <td class="kpi-name">Conversão pós-monitoria</td>
+        <td>Δ tNPS agente pré vs. pós feedback</td>
+        <td><span class="freq-tag">Quinzenal</span></td>
+        <td class="owner">Voyager</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="footer-row">
+    <div class="alert-box">
+      <div class="alert-title">Pontos de atenção ativos</div>
+      <div class="box-item">→ CS High Value com queda de 6,52 p.p. — diagnóstico urgente</div>
+      <div class="box-item">→ N1 Chat ainda impactado por CSI — acompanhar expurgo</div>
+      <div class="box-item">→ Consistência FDS ainda abaixo de dias úteis — principal gap</div>
+      <div class="box-item">→ Gap vs. Starlink como referência de benchmark</div>
+    </div>
+    <div class="info-box">
+      <div class="info-title">Sinais positivos — leitura de abril</div>
+      <div class="box-item">→ N1 Chat sem CSI já bate o target projetado para mai/26</div>
+      <div class="box-item">→ N1 Phone mesmo com CSI já supera o target do próximo mês</div>
+      <div class="box-item">→ Desvios mapeados com plano direcionado — execução em curso</div>
+      <div class="box-item">→ Estrutura SPACE + 3 supervisores novos já em implementação</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
